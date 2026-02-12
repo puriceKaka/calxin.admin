@@ -1,3 +1,16 @@
+// Toggle menu functionality
+function toggleMenu() {
+    const sideMenu = document.getElementById("sideMenu");
+    const header = document.querySelector(".header");
+    if (sideMenu && header) {
+        sideMenu.classList.toggle("active");
+        header.classList.toggle("menu-open");
+    }
+}
+
+// Expose toggleMenu globally
+window.toggleMenu = toggleMenu;
+
 // Toggle order fields based on message type selection
 function toggleOrderFields() {
     const messageType = document.getElementById('messageType').value;
@@ -12,6 +25,35 @@ function toggleOrderFields() {
 
 // Handle form submission
 document.addEventListener('DOMContentLoaded', function() {
+    // Close menu when clicking on navigation links
+    const navLinks = document.querySelectorAll(".side-menu .nav-menu a");
+    navLinks.forEach(link => {
+        link.addEventListener("click", function() {
+            const sideMenu = document.getElementById("sideMenu");
+            const header = document.querySelector(".header");
+            if (sideMenu && header) {
+                sideMenu.classList.remove("active");
+                header.classList.remove("menu-open");
+            }
+        });
+    });
+
+    // Close menu when clicking outside of it
+    document.addEventListener("click", function(event) {
+        const sideMenu = document.getElementById("sideMenu");
+        const hamburger = document.querySelector(".hamburger");
+        const header = document.querySelector(".header");
+        
+        if (sideMenu && hamburger && header) {
+            if (!sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
+                if (sideMenu.classList.contains("active")) {
+                    sideMenu.classList.remove("active");
+                    header.classList.remove("menu-open");
+                }
+            }
+        }
+    });
+
     const contactForm = document.getElementById('contactForm');
     
     if (contactForm) {
@@ -58,26 +100,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Close hamburger menu when clicking on a link
-function toggleMenu() {
-    const sideMenu = document.getElementById('sideMenu');
-    const header = document.querySelector('.header');
-    
-    if (sideMenu) {
-        sideMenu.classList.toggle('active');
-        header.classList.toggle('menu-open');
-    }
-}
-
-// Close menu when clicking on a menu item
-const menuItems = document.querySelectorAll('.side-menu ul li');
-menuItems.forEach(item => {
-    item.addEventListener('click', function() {
-        const sideMenu = document.getElementById('sideMenu');
-        const header = document.querySelector('.header');
-        if (sideMenu) {
-            sideMenu.classList.remove('active');
-            header.classList.remove('menu-open');
-        }
-    });
-});

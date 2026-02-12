@@ -570,6 +570,48 @@ document.addEventListener("DOMContentLoaded", function(){
     // Update cart count
     updateCartCount();
 
+    // Toggle menu functionality
+    function toggleMenu() {
+        const sideMenu = document.getElementById("sideMenu");
+        const header = document.querySelector(".header");
+        if (sideMenu && header) {
+            sideMenu.classList.toggle("active");
+            header.classList.toggle("menu-open");
+        }
+    }
+
+    // Expose toggleMenu globally
+    window.toggleMenu = toggleMenu;
+
+    // Close menu when clicking on navigation links
+    const navLinks = document.querySelectorAll(".side-menu .nav-menu a");
+    navLinks.forEach(link => {
+        link.addEventListener("click", function() {
+            const sideMenu = document.getElementById("sideMenu");
+            const header = document.querySelector(".header");
+            if (sideMenu && header) {
+                sideMenu.classList.remove("active");
+                header.classList.remove("menu-open");
+            }
+        });
+    });
+
+    // Close menu when clicking outside of it
+    document.addEventListener("click", function(event) {
+        const sideMenu = document.getElementById("sideMenu");
+        const hamburger = document.querySelector(".hamburger");
+        const header = document.querySelector(".header");
+        
+        if (sideMenu && hamburger && header) {
+            if (!sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
+                if (sideMenu.classList.contains("active")) {
+                    sideMenu.classList.remove("active");
+                    header.classList.remove("menu-open");
+                }
+            }
+        }
+    });
+
     // Populate categories dynamically
     const categories = ["SUVs", "Sedans", "Sports", "Trucks", "Vans", "Hatchbacks"];
     const categoryList = document.getElementById("categoryList");
@@ -583,7 +625,11 @@ document.addEventListener("DOMContentLoaded", function(){
             li.onclick = function() {
                 // Close side menu when category is clicked
                 const sideMenu = document.getElementById("sideMenu");
-                if(sideMenu) sideMenu.classList.remove("active");
+                const header = document.querySelector(".header");
+                if(sideMenu && header) {
+                    sideMenu.classList.remove("active");
+                    header.classList.remove("menu-open");
+                }
                 // Call loadGallery with category filter from home-gallery.js
                 if(window.filterByCategory) {
                     window.currentFilter = cat;
@@ -613,6 +659,7 @@ document.addEventListener("DOMContentLoaded", function(){
             const stockClass = vehicle.stock > 20 ? "stock-high" : vehicle.stock > 10 ? "stock-medium" : "stock-low";
             const stockText = vehicle.stock > 0 ? `${vehicle.stock} in stock` : "Out of stock";
 
+            card.style.cursor = "pointer";
             card.innerHTML = `
                 <div class="card-image-wrapper">
                     <img src="${vehicle.image}" alt="${vehicle.name}">
@@ -626,9 +673,13 @@ document.addEventListener("DOMContentLoaded", function(){
                     </div>
                     <p class="card-category">${vehicle.category}</p>
                     <p class="card-price">KES ${vehicle.price.toLocaleString()}</p>
-                    <button onclick="addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}')" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                    <button onclick="event.stopPropagation(); addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}')" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
                 </div>
             `;
+            // Make entire card clickable to open product details
+            card.addEventListener('click', function() {
+                viewProductDetails(index);
+            });
             productsContainer.appendChild(card);
         });
         
@@ -664,3 +715,43 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 });
+
+// View product details in modal
+function viewProductDetails(index) {
+    const vehicle = vehicles[index];
+    const modal = `
+        <div class="product-modal">
+            <div class="product-modal-content">
+                <span class="close" onclick="closeProductModal()">&times;</span>
+                <div class="product-modal-body">
+                    <div class="product-modal-image">
+                        <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(vehicle.name)}'">
+                    </div>
+                    <div class="product-modal-details">
+                        <h2>${vehicle.name}</h2>
+                        <p class="product-modal-category">Category: ${vehicle.category}</p>
+                        <div class="product-modal-rating">
+                            <span class="stars">${'★'.repeat(Math.floor(vehicle.rating))}</span>
+                            <span>${vehicle.rating}/5</span>
+                        </div>
+                        <p class="product-modal-price">KES ${vehicle.price.toLocaleString()}</p>
+                        <p class="product-modal-stock">${vehicle.stock > 0 ? `${vehicle.stock} in stock` : 'Out of stock'}</p>
+                        <div class="product-modal-actions">
+                            <button class="btn-primary" onclick="addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}'); closeProductModal();" ${vehicle.stock === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <a href="product-view.html?id=${index}" class="btn-secondary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    showLightbox(modal);
+}
+
+function closeProductModal() {
+    closeLightbox();
+}
