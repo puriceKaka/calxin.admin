@@ -432,7 +432,7 @@ function updateCartCount() {
 
 // View product detail
 function viewProductDetail(productId) {
-    window.location.href = `product-view.html?id=${productId}`;
+    window.location.href = 'cart.html';
 }
 
 // Initialize cart count on page load

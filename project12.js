@@ -432,12 +432,10 @@ function makeDraggable() {
 function attachCardClicks(){
     const cards = document.querySelectorAll(".products .card");
     cards.forEach((card, index) => {
-        const vehicle = vehicles[index];
         const img = card.querySelector("img");
         img.style.cursor = "pointer";
         img.onclick = () => {
-            openModal(vehicle);
-            makeDraggable();
+            window.location.href = "cart.html";
         };
     });
 }
