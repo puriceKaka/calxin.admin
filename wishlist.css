@@ -127,7 +127,7 @@ body {
 .wishlist-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
-    border-color: #ff6b00;
+    border-color: #0077be;
 }
 
 .wishlist-item-image {
@@ -185,7 +185,7 @@ body {
 
 .wishlist-item-price {
     font-size: 1.2rem;
-    color: #ff6b00;
+    color: #0077be;
     font-weight: 700;
     margin-bottom: 0.8rem;
 }
@@ -205,7 +205,7 @@ body {
 .btn-add-to-cart {
     flex: 1;
     padding: 10px 12px;
-    background: linear-gradient(135deg, #ff6b00, #ff8c42);
+    background: linear-gradient(135deg, #0077be, #00a8e8);
     color: white;
     border: none;
     border-radius: 6px;
@@ -220,7 +220,7 @@ body {
 }
 
 .btn-add-to-cart:hover {
-    background: linear-gradient(135deg, #ff5500, #ff7a2a);
+    background: linear-gradient(135deg, #0066a1, #0088c9);
     transform: translateY(-2px);
 }
 
@@ -229,8 +229,8 @@ body {
     height: 44px;
     padding: 0;
     background: #f5f5f5;
-    color: #ff6b00;
-    border: 2px solid #ff6b00;
+    color: #0077be;
+    border: 2px solid #0077be;
     border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
@@ -241,7 +241,7 @@ body {
 }
 
 .btn-remove:hover {
-    background: #ff6b00;
+    background: #0077be;
     color: white;
 }
 
