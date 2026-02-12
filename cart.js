@@ -14,7 +14,7 @@ const PORTAL_PRODUCTS = [
 
 function resolveImagePath(path) {
     const image = String(path || "").replace("images.Calxin/", "calxin.images/");
-    return image || "https://via.placeholder.com/120";
+    return image ? encodeURI(image) : "https://via.placeholder.com/120";
 }
 
 function normalizeCartItems(items) {
@@ -107,6 +107,7 @@ function createCartItemElement(item, index) {
                 <input type="number" id="quantity-${index}" value="${item.quantity}" min="1" readonly>
                 <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
             </div>
+            ${item.productId || item.productId === 0 ? `<a class="view-details-btn" href="product-view.html?id=${item.productId}">View Details</a>` : ''}
         </div>
         <div class="cart-item-total">
             <div class="item-subtotal">KES ${itemTotal.toLocaleString()}</div>

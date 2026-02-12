@@ -280,12 +280,16 @@ function addToLiked(name, image, price) {
 
 // Add to cart
 function addToCart(name, price, image) {
+    const productId = vehicles.findIndex(v => v.name === name && v.price === price);
     const found = cart.find(item => item.name === name);
     if (found) {
         found.quantity = (found.quantity || found.qty || 1) + 1;
         found.qty = found.quantity;
+        if ((found.productId === undefined || found.productId === null) && productId >= 0) {
+            found.productId = productId;
+        }
     } else {
-        cart.push({ name, price, image, quantity: 1, qty: 1 });
+        cart.push({ name, price, image, quantity: 1, qty: 1, productId: productId >= 0 ? productId : 0 });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -652,9 +656,9 @@ const availableImageFiles = [
 function resolveVehicleImage(path, index) {
     const rawName = (path || "").split("/").pop();
     if (rawName && availableImageFiles.includes(rawName)) {
-        return `calxin.images/${rawName}`;
+        return encodeURI(`calxin.images/${rawName}`);
     }
-    return `calxin.images/${availableImageFiles[index % availableImageFiles.length]}`;
+    return encodeURI(`calxin.images/${availableImageFiles[index % availableImageFiles.length]}`);
 }
 
 vehicles.forEach((vehicle, index) => {
@@ -774,10 +778,6 @@ document.addEventListener("DOMContentLoaded", function(){
                     <button onclick="event.stopPropagation(); addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}')" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
                 </div>
             `;
-            // Make entire card clickable to open product details
-            card.addEventListener('click', function() {
-                viewProductDetails(index);
-            });
             productsContainer.appendChild(card);
         });
         

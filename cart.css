@@ -257,6 +257,20 @@ body {
     width: fit-content;
 }
 
+.view-details-btn {
+    margin-top: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid #0077be;
+    color: #0077be;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 .qty-btn {
     width: 30px;
     height: 30px;

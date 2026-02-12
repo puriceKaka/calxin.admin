@@ -88,9 +88,9 @@ const availableImageFiles = [
 function resolveProductImage(path, index) {
     const rawName = (path || "").split("/").pop();
     if (rawName && availableImageFiles.includes(rawName)) {
-        return `calxin.images/${rawName}`;
+        return encodeURI(`calxin.images/${rawName}`);
     }
-    return `calxin.images/${availableImageFiles[index % availableImageFiles.length]}`;
+    return encodeURI(`calxin.images/${availableImageFiles[index % availableImageFiles.length]}`);
 }
 
 products.forEach((product, index) => {
