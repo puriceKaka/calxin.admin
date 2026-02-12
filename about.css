@@ -381,36 +381,13 @@
     opacity: 0.9;
 }
 
-/* Featured Cars - Hide */
-.featured-cars {
-    display: none;
-}
-
-.carousel-container {
-    display: none;
-}
-
+/* Carousel styling for featured content */
 .carousel {
-    display: none;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.carousel-btn:hover,
-.carousel-btn.prev,
-.carousel-btn.next,
-.carousel-dots,
-.dot,
-.dot.active,
-.dot:hover,
-.contact-cta,
-.cta-content,
-.cta-text,
-.cta-buttons {
-    display: none;
 }
 
 .btn {
