@@ -20,8 +20,6 @@ function navigateTo(page) {
         window.location.href = 'about.html';
     } else if(page === 'contact') {
         window.location.href = 'contact.html';
-    } else if(page === 'admin') {
-        window.location.href = 'admin.html';
     }
 }
 
