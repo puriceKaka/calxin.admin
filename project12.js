@@ -124,6 +124,7 @@ function filterByCategory(category) {
     const productContainer = document.querySelector(".products");
     if(productContainer) {
         productContainer.innerHTML = html;
+        attachCardClicks();
     }
 }
 
@@ -439,10 +440,12 @@ function makeDraggable() {
 // Attach click events to all cards
 function attachCardClicks(){
     const cards = document.querySelectorAll(".products .card");
-    cards.forEach((card, index) => {
-        const img = card.querySelector("img");
-        img.style.cursor = "pointer";
-        img.onclick = () => {
+    cards.forEach((card) => {
+        card.style.cursor = "pointer";
+        card.onclick = (event) => {
+            if (event.target.closest("button, a")) {
+                return;
+            }
             window.location.href = "cart.html";
         };
     });
