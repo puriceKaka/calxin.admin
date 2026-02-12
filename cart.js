@@ -68,7 +68,7 @@ function normalizeCartItems(items) {
 
 // Mobile menu toggle
 function toggleMobileMenu() {
-    const sideMenu = document.getElementById('sideMenuMobile');
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger) {
@@ -78,7 +78,7 @@ function toggleMobileMenu() {
 }
 
 function closeMobileMenu() {
-    const sideMenu = document.getElementById('sideMenuMobile');
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger) {
@@ -89,7 +89,7 @@ function closeMobileMenu() {
 
 // Close menu when clicking outside
 document.addEventListener('click', function(event) {
-    const sideMenu = document.getElementById('sideMenuMobile');
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger && sideMenu.classList.contains('active')) {

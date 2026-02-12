@@ -1,7 +1,35 @@
 // Load wishlist on page load
 document.addEventListener('DOMContentLoaded', function() {
     loadWishlist();
+    setupSideMenu();
 });
+
+function toggleMenu() {
+    const sideMenu = document.getElementById('sideMenu');
+    if (sideMenu) {
+        sideMenu.classList.toggle('active');
+    }
+}
+
+window.toggleMenu = toggleMenu;
+
+function setupSideMenu() {
+    document.addEventListener('click', function(event) {
+        const sideMenu = document.getElementById('sideMenu');
+        const hamburger = document.querySelector('.hamburger');
+        if (sideMenu && hamburger && !sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
+            sideMenu.classList.remove('active');
+        }
+    });
+
+    const navLinks = document.querySelectorAll('.side-menu .nav-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            const sideMenu = document.getElementById('sideMenu');
+            if (sideMenu) sideMenu.classList.remove('active');
+        });
+    });
+}
 
 // Load and display wishlist items
 function loadWishlist() {
