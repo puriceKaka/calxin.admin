@@ -529,7 +529,7 @@ ul {
    ================================ */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 25px;
     padding: 30px;
     animation: fadeIn 0.8s ease;
@@ -992,7 +992,7 @@ ul {
    ================================ */
 @media (max-width: 1024px) {
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
         gap: 20px;
         padding: 20px;
     }
@@ -1019,7 +1019,7 @@ ul {
     }
 
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
         gap: 15px;
         padding: 15px;
     }
@@ -1052,7 +1052,7 @@ ul {
     }
 
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
         gap: 10px;
         padding: 10px;
     }

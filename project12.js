@@ -104,7 +104,7 @@ function filterByCategory(category) {
         html += `
         <div class="card" style="opacity: 1;">
             <div class="card-image-wrapper">
-                <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='https://via.placeholder.com/200?text=${vehicle.name}'">
+                <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='${LOCAL_FALLBACK_IMAGE}'">
                 <span class="stock-badge ${stockClass}">${stockText}</span>
             </div>
             <div class="card-content">
@@ -148,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function(){
 // ================================
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let liked = JSON.parse(localStorage.getItem("liked")) || [];
+const LOCAL_FALLBACK_IMAGE = "calxin.images/WhatsApp Image 2026-01-23 at 4.58.19 PM.jpeg";
 
 // Show cart with edit functionality
 function showCart() {
@@ -659,9 +660,9 @@ const availableImageFiles = [
 function resolveVehicleImage(path, index) {
     const rawName = (path || "").split("/").pop();
     if (rawName && availableImageFiles.includes(rawName)) {
-        return encodeURI(`calxin.images/${rawName}`);
+        return `calxin.images/${rawName}`;
     }
-    return encodeURI(`calxin.images/${availableImageFiles[index % availableImageFiles.length]}`);
+    return `calxin.images/${availableImageFiles[index % availableImageFiles.length]}`;
 }
 
 vehicles.forEach((vehicle, index) => {
@@ -765,7 +766,7 @@ document.addEventListener("DOMContentLoaded", function(){
             card.style.cursor = "pointer";
             card.innerHTML = `
                 <div class="card-image-wrapper">
-                    <img src="${vehicle.image}" alt="${vehicle.name}">
+                    <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='${LOCAL_FALLBACK_IMAGE}'">
                     <span class="stock-badge ${stockClass}">${stockText}</span>
                 </div>
                 <div class="card-content">
@@ -824,7 +825,7 @@ function viewProductDetails(index) {
                 <span class="close" onclick="closeProductModal()">&times;</span>
                 <div class="product-modal-body">
                     <div class="product-modal-image">
-                        <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(vehicle.name)}'">
+                        <img src="${vehicle.image}" alt="${vehicle.name}" onerror="this.src='${LOCAL_FALLBACK_IMAGE}'">
                     </div>
                     <div class="product-modal-details">
                         <h2>${vehicle.name}</h2>
