@@ -1,6 +1,18 @@
 // ================================
 // NAVIGATION & INTERACTIVITY
 // ================================
+
+// Cart icon click handler
+document.addEventListener("DOMContentLoaded", function(){
+    const cartIcon = document.querySelector(".cart-icon");
+    if(cartIcon) {
+        cartIcon.addEventListener("click", function(){
+            window.location.href = 'cart.html';
+        });
+        cartIcon.style.cursor = "pointer";
+    }
+});
+
 function navigateTo(page) {
     if(page === 'home') {
         window.location.href = 'index.html';
