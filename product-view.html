@@ -21,8 +21,25 @@
                 <a href="cart.html">Cart</a>
                 <a href="wishlist.html">Wishlist</a>
             </div>
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
+
+    <!-- Side Menu for Mobile -->
+    <aside class="side-menu-mobile" id="sideMenuMobile">
+        <h3><i class="fas fa-bars"></i> Menu</h3>
+        <ul class="nav-menu-mobile">
+            <li><a href="index.html" onclick="closeMobileMenu()"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html" onclick="closeMobileMenu()"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="contact.html" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="cart.html" onclick="closeMobileMenu()"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+            <li><a href="wishlist.html" onclick="closeMobileMenu()"><i class="fas fa-heart"></i> Wishlist</a></li>
+        </ul>
+    </aside>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">

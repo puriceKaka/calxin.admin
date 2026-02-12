@@ -49,6 +49,39 @@ const products = [
 let currentProduct = null;
 let quantity = 1;
 
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger) {
+        sideMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    }
+}
+
+function closeMobileMenu() {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger) {
+        sideMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger && sideMenu.classList.contains('active')) {
+        if (!sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
+            closeMobileMenu();
+        }
+    }
+});
+
 // Load product details on page load
 document.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);

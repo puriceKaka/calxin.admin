@@ -5,6 +5,39 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDeliveryOptions();
 });
 
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger) {
+        sideMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    }
+}
+
+function closeMobileMenu() {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger) {
+        sideMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const sideMenu = document.getElementById('sideMenuMobile');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (sideMenu && hamburger && sideMenu.classList.contains('active')) {
+        if (!sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
+            closeMobileMenu();
+        }
+    }
+});
+
 // Load and display cart items
 function loadCart() {
     const cartData = localStorage.getItem('cart');
