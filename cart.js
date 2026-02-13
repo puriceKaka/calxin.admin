@@ -171,15 +171,11 @@ function createCartItemElement(item, index) {
     div.className = 'cart-item';
     
     const itemTotal = item.price * item.quantity;
-    const imageGroup = buildImageGroup(item.image, item.productId, item.quantity);
-    const thumbs = imageGroup
-        .map((src, thumbIndex) => `<img src="${src}" alt="${item.name} ${thumbIndex + 1}" onerror="this.src='${resolveImagePath(item.image)}'">`)
-        .join("");
+    const mainImage = resolveImagePath(item.image);
 
     div.innerHTML = `
         <div class="cart-item-image">
-            <img src="${imageGroup[0]}" alt="${item.name}">
-            <div class="cart-item-thumbs">${thumbs}</div>
+            <img src="${mainImage}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/120?text=Product'">
         </div>
         <div class="cart-item-details">
             <div class="cart-item-name">${item.name}</div>

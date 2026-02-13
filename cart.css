@@ -230,21 +230,6 @@ body {
     object-fit: cover;
 }
 
-.cart-item-thumbs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    padding: 4px;
-    background: #fff;
-}
-
-.cart-item-thumbs img {
-    width: 100%;
-    height: 32px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
 .cart-item-details {
     display: flex;
     flex-direction: column;
@@ -380,8 +365,8 @@ body {
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 80px;
+    position: static;
+    top: auto;
     border: 2px solid #f0f0f0;
 }
 
@@ -811,4 +796,12 @@ html {
 *::after {
     animation: none !important;
     transition: none !important;
+}
+
+.cart-item:hover,
+.remove-btn:hover,
+.btn-checkout:hover,
+.btn-secondary:hover,
+.suggested-card:hover {
+    transform: none !important;
 }
