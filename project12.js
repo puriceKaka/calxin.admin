@@ -678,7 +678,7 @@ const vehicles = [
     { name: "Tail Light Assembly", price: 3500, category: "Lighting", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.12 PM.jpeg", stock: 31, rating: 4.8 },
     { name: "Windshield Wiper Blades", price: 1200, category: "Accessories", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.14 PM.jpeg", stock: 48, rating: 4.9 },
     { name: "Car Door Lock Actuator", position: "Front Left", price: 2800, category: "Electrical", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.15 PM.jpeg", stock: 19, rating: 4.6 },
-    { name: "Window Regulator Motor", price: 3200, category: "Electrical", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.17 PM.jpeg", stock: 22, rating: 4.7 },
+    { name: "Window Regulator Motor", price: 3200, category: "Electrical", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.01.14 PM.jpeg", stock: 22, rating: 4.7 },
     { name: "HVAC Compressor", price: 14500, category: "HVAC", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.18 PM.jpeg", stock: 9, rating: 4.8 },
     { name: "Cabin Air Vents", price: 1500, category: "HVAC", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.20 PM.jpeg", stock: 36, rating: 4.7 },
     { name: "Engine Oil 5L Synthetic", price: 2500, category: "Oils & Fluids", image: "calxin.images/WhatsApp Image 2026-01-23 at 5.00.22 PM.jpeg", stock: 58, rating: 4.9 },

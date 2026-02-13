@@ -10,15 +10,19 @@ let editingId = null;
 let editingType = null;
 
 const SITE_IMAGE_FILES = [
+    "WhatsApp Image 2026-01-23 at 4.58.16 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.18 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.19 PM (1).jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.19 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.23 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.26 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.27 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.30 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.31 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.35 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.37 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.39 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.40 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.42 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.44 PM.jpeg",
     "WhatsApp Image 2026-01-23 at 4.58.45 PM.jpeg",
@@ -350,8 +354,11 @@ function saveImage(event) {
     const file = fileInput.files[0];
     const imageUrl = document.getElementById("imageUrl").value.trim();
     const description = document.getElementById("imageDescription").value.trim();
+    const existingImage = editingId ? getAllImages().find(i => Number(i.id) === Number(editingId)) : null;
+    const effectiveUrl = imageUrl || (existingImage ? existingImage.url || "" : "");
+    const effectiveData = existingImage ? existingImage.data || "" : "";
 
-    if(!file && !imageUrl) {
+    if(!file && !effectiveUrl && !effectiveData) {
         alert("Select an image file or provide an image URL/path.");
         return;
     }
@@ -360,8 +367,8 @@ function saveImage(event) {
         const image = {
             id: editingId || Date.now(),
             name: document.getElementById("imageName").value,
-            data: imagePayload.data || "",
-            url: imagePayload.url || "",
+            data: imagePayload.data || effectiveData || "",
+            url: imagePayload.url || effectiveUrl || "",
             type: imagePayload.type || "",
             category: document.getElementById("imageCategory").value,
             description: description,

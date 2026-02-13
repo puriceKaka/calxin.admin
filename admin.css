@@ -19,7 +19,8 @@ body {
    ================================ */
 .admin-container {
     display: flex;
-    height: 100vh;
+    flex-wrap: wrap;
+    min-height: 100vh;
     overflow: hidden;
 }
 
@@ -131,9 +132,10 @@ body {
    ================================ */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, minmax(190px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .stat-card {
@@ -342,8 +344,9 @@ tr:hover {
    ================================ */
 .images-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
+    width: 100%;
 }
 
 .image-card {
@@ -413,12 +416,15 @@ tr:hover {
    ADMIN FOOTER
    ================================ */
 .admin-footer {
-    background: linear-gradient(135deg, #0077be, #00a8e8);
+    background: #000;
     color: white;
     padding: 20px;
     text-align: center;
     border-top: 2px solid rgba(0, 0, 0, 0.1);
     margin-top: auto;
+    flex-basis: 100%;
+    width: 100%;
+    max-width: 100%;
 }
 
 .admin-footer p {
@@ -460,7 +466,7 @@ tr:hover {
     }
 
     .dashboard-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
     }
 
     .form-row {
@@ -468,7 +474,7 @@ tr:hover {
     }
 
     .images-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 
     table {
@@ -477,5 +483,11 @@ tr:hover {
 
     th, td {
         padding: 10px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
     }
 }
