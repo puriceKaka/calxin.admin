@@ -115,7 +115,10 @@ function filterByCategory(category) {
                 </div>
                 <p class="card-category">${vehicle.category}</p>
                 <p class="card-price">KES ${vehicle.price.toLocaleString()}</p>
-                <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                <div class="card-actions">
+                    <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                    <button class="wishlist-heart-btn ${isProductInWishlist(index) ? "liked" : ""}" data-product-id="${index}" onclick="toggleWishlistByProductId(${index}, event)" title="Like">❤️</button>
+                </div>
             </div>
         </div>
         `;
@@ -125,6 +128,7 @@ function filterByCategory(category) {
     if(productContainer) {
         productContainer.innerHTML = html;
         attachCardClicks();
+        updateWishlistButtons();
     }
 }
 
@@ -272,12 +276,63 @@ function addToLiked(name, image, price) {
     const found = liked.find(item => item.name === name);
     if(found) {
         liked = liked.filter(item => item.name !== name);
-        showToastNotification(`✗ ${name} removed from favorites!`);
+        showToastNotification(`${name} removed from favorites`);
     } else {
         liked.push({ name, image, price });
-        showToastNotification(`❤ ${name} added to favorites!`);
+        showToastNotification(`${name} added to favorites`);
     }
     localStorage.setItem("liked", JSON.stringify(liked));
+}
+
+function getWishlist() {
+    return JSON.parse(localStorage.getItem("wishlist") || "[]");
+}
+
+function isProductInWishlist(productId) {
+    return getWishlist().some(item => Number(item.id) === Number(productId));
+}
+
+function toggleWishlistByProductId(productId, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const vehicle = vehicles[Number(productId)];
+    if (!vehicle) return;
+
+    let wishlist = getWishlist();
+    const exists = wishlist.some(item => Number(item.id) === Number(productId));
+
+    if (exists) {
+        wishlist = wishlist.filter(item => Number(item.id) !== Number(productId));
+        showToastNotification(`${vehicle.name} removed from wishlist`);
+    } else {
+        wishlist.push({
+            id: Number(productId),
+            name: vehicle.name,
+            image: vehicle.image,
+            price: vehicle.price,
+            category: vehicle.category,
+            rating: vehicle.rating,
+            stock: vehicle.stock
+        });
+        showToastNotification(`${vehicle.name} added to wishlist`);
+    }
+
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    updateWishlistButtons();
+}
+
+function updateWishlistButtons() {
+    const wishlist = getWishlist();
+    document.querySelectorAll(".wishlist-heart-btn").forEach((btn) => {
+        const productId = Number(btn.getAttribute("data-product-id"));
+        const likedNow = wishlist.some(item => Number(item.id) === productId);
+        btn.classList.toggle("liked", likedNow);
+        btn.setAttribute("aria-label", likedNow ? "Remove from wishlist" : "Add to wishlist");
+        btn.textContent = likedNow ? "❤️" : "🤍";
+    });
 }
 
 // Add to cart
@@ -298,7 +353,7 @@ function addToCart(name, price, image) {
     updateCartCount();
     
     // Show a nice toast notification
-    showToastNotification(`✓ ${name} added to cart!`);
+    showToastNotification(`${name} added to cart`);
 }
 
 function quickAddToCartAndOpenCart(name, price, image, event) {
@@ -554,7 +609,7 @@ document.addEventListener("DOMContentLoaded", function(){
         if(item.textContent.trim() !== "" && item.tagName !== "HR") {
             item.addEventListener("click", function(){
                 const category = this.textContent.trim();
-                showToastNotification(`🔍 Filtering by: ${category}`);
+                showToastNotification(`Filtering by: ${category}`);
                 
                 // Filter products by category
                 filterProductsByCategory(category);
@@ -676,16 +731,43 @@ const availableImageFiles = [
 ];
 
 function resolveVehicleImage(path, index) {
-    const rawName = (path || "").split("/").pop();
-    if (rawName && availableImageFiles.includes(rawName)) {
-        return `calxin.images/${rawName}`;
+    const normalized = String(path || "").replace("images.Calxin/", "calxin.images/");
+    if (normalized.startsWith("calxin.images/")) {
+        return encodeURI(normalized);
     }
-    return `calxin.images/${availableImageFiles[index % availableImageFiles.length]}`;
+    const rawName = normalized.split("/").pop();
+    if (rawName && availableImageFiles.includes(rawName)) {
+        return encodeURI(`calxin.images/${rawName}`);
+    }
+    return encodeURI(`calxin.images/${availableImageFiles[index % availableImageFiles.length]}`);
 }
 
 vehicles.forEach((vehicle, index) => {
     vehicle.image = resolveVehicleImage(vehicle.image, index);
 });
+
+function extendVehiclesWithGalleryImages() {
+    const usedImages = new Set(
+        vehicles.map(item => decodeURI(String(item.image || "").split("/").pop() || ""))
+    );
+    const categories = ["Accessories", "Electrical", "Cooling", "Tools", "Filters"];
+    let nextIndex = 1;
+
+    availableImageFiles.forEach((fileName) => {
+        if (usedImages.has(fileName)) return;
+        vehicles.push({
+            name: `Auto Part Gallery ${nextIndex}`,
+            price: 1200 + (nextIndex * 250),
+            category: categories[nextIndex % categories.length],
+            image: resolveVehicleImage(`calxin.images/${fileName}`, nextIndex),
+            stock: 10 + (nextIndex % 20),
+            rating: 4.5
+        });
+        nextIndex += 1;
+    });
+}
+
+extendVehiclesWithGalleryImages();
 
 // ================================
 // INITIALIZATION
@@ -829,7 +911,10 @@ document.addEventListener("DOMContentLoaded", function(){
                     </div>
                     <p class="card-category">${vehicle.category}</p>
                     <p class="card-price">KES ${vehicle.price.toLocaleString()}</p>
-                    <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                    <div class="card-actions">
+                        <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                        <button class="wishlist-heart-btn ${isProductInWishlist(index) ? "liked" : ""}" data-product-id="${index}" onclick="toggleWishlistByProductId(${index}, event)" title="Like">❤️</button>
+                    </div>
                 </div>
             `;
             productsContainer.appendChild(card);
@@ -837,6 +922,7 @@ document.addEventListener("DOMContentLoaded", function(){
         
         // Attach click events after all cards are created
         attachCardClicks();
+        updateWishlistButtons();
     }
 
     // Search functionality with smooth filtering
@@ -862,7 +948,7 @@ document.addEventListener("DOMContentLoaded", function(){
             });
             
             if (visibleCount === 0 && text.length > 0) {
-                showToastNotification("❌ No spare parts found matching your search");
+                showToastNotification("No spare parts found matching your search");
             }
         });
     }

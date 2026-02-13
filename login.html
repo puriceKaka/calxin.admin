@@ -247,12 +247,65 @@
             margin-bottom: 1rem;
             display: none;
         }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            border: none;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .checkbox-row label {
+            margin: 0;
+            font-weight: 500;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .forgot-password-panel {
+            display: none;
+            margin-top: 1rem;
+            padding: 14px;
+            border-radius: 8px;
+            background: #f5fbff;
+            border: 1px solid #dcefff;
+        }
+
+        .forgot-password-panel h4 {
+            font-size: 1rem;
+            color: #0a4f78;
+            margin-bottom: 0.6rem;
+        }
+
+        .forgot-password-panel p {
+            font-size: 0.9rem;
+            color: #4b5d6d;
+            margin-bottom: 0.9rem;
+        }
+
+        .forgot-password-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .forgot-password-actions .btn {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="auth-header">
-            <h1>🚗 Calxin Auto</h1>
+            <h1>Calxin Auto</h1>
             <p>Your Trusted Auto Partner</p>
         </div>
 
@@ -274,16 +327,29 @@
                     <span class="error-message" id="loginPasswordError"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="checkbox-row">
                     <input type="checkbox" id="rememberMe">
-                    <label for="rememberMe" style="display: inline; font-weight: 400;">Remember me</label>
+                    <label for="rememberMe">Remember me</label>
                 </div>
 
                 <button class="btn btn-primary" onclick="handleLogin()">Sign In</button>
                 <button class="btn btn-secondary" onclick="toggleForms()">Create New Account</button>
 
                 <div class="toggle-form">
-                    <a href="#">Forgot password?</a>
+                    <a href="#" onclick="showForgotPassword(event)">Forgot password?</a>
+                </div>
+                <div class="forgot-password-panel" id="forgotPasswordPanel">
+                    <h4>Password reset request</h4>
+                    <p>Enter your account email and we will send a password reset instruction.</p>
+                    <div class="form-group">
+                        <label for="forgotEmail">Account Email</label>
+                        <input type="email" id="forgotEmail" placeholder="your@email.com">
+                        <span class="error-message" id="forgotEmailError"></span>
+                    </div>
+                    <div class="forgot-password-actions">
+                        <button class="btn btn-primary" onclick="handleForgotPassword()">Request Reset</button>
+                        <button class="btn btn-secondary" onclick="hideForgotPassword()">Close</button>
+                    </div>
                 </div>
             </div>
 
@@ -352,6 +418,41 @@
 
         function clearErrors() {
             document.querySelectorAll('.error-message').forEach(err => err.textContent = '');
+        }
+
+        function showForgotPassword(event) {
+            event.preventDefault();
+            clearErrors();
+            document.getElementById('forgotPasswordPanel').style.display = 'block';
+        }
+
+        function hideForgotPassword() {
+            document.getElementById('forgotPasswordPanel').style.display = 'none';
+            document.getElementById('forgotEmail').value = '';
+            document.getElementById('forgotEmailError').textContent = '';
+        }
+
+        function handleForgotPassword() {
+            clearErrors();
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email) {
+                document.getElementById('forgotEmailError').textContent = 'Email is required';
+                return;
+            }
+            if (!isValidEmail(email)) {
+                document.getElementById('forgotEmailError').textContent = 'Invalid email format';
+                return;
+            }
+
+            const requests = JSON.parse(localStorage.getItem('passwordResetRequests') || '[]');
+            requests.push({
+                email: email,
+                status: 'Pending',
+                requestedAt: new Date().toISOString()
+            });
+            localStorage.setItem('passwordResetRequests', JSON.stringify(requests));
+            alert('Password reset request submitted successfully.');
+            hideForgotPassword();
         }
 
         function handleLogin() {
@@ -427,6 +528,7 @@
                     name: name,
                     email: email,
                     phone: phone,
+                    password: password,
                     loggedIn: true,
                     signupTime: new Date().toISOString()
                 }));
@@ -457,6 +559,11 @@
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
+                    const forgotVisible = document.getElementById('forgotPasswordPanel').style.display === 'block';
+                    if (forgotVisible) {
+                        handleForgotPassword();
+                        return;
+                    }
                     if (!document.getElementById('loginForm').classList.contains('form-hidden')) {
                         handleLogin();
                     } else {
@@ -468,3 +575,4 @@
     </script>
 </body>
 </html>
+
