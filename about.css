@@ -456,7 +456,7 @@
    FOOTER STYLES
    ================================ */
 .footer {
-    background: rgba(0, 0, 0, 0.7);
+    background: #000;
     color: white;
     padding: 40px 20px 20px;
     margin-top: 50px;
@@ -639,3 +639,4 @@
         gap: 20px;
     }
 }
+

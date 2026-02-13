@@ -66,14 +66,30 @@ function normalizeCartItems(items) {
     }));
 }
 
-function buildImageGroup(baseImage, productId) {
+function getAdminImages() {
+    const admin = JSON.parse(localStorage.getItem('adminProducts') || '[]');
+    return admin
+        .map(item => resolveImagePath(item.image))
+        .filter(Boolean);
+}
+
+function buildImageGroup(baseImage, productId, quantity) {
     const seed = Math.abs(Number(productId) || 0) % AVAILABLE_IMAGE_FILES.length;
-    const group = [resolveImagePath(baseImage)];
-    for (let i = 0; i < 3; i += 1) {
+    const mainImage = resolveImagePath(baseImage);
+    const group = [];
+    const sameCount = Math.min(Math.max(Number(quantity) || 1, 1), 6);
+    for (let i = 0; i < sameCount; i += 1) {
+        group.push(mainImage);
+    }
+
+    const adminImages = getAdminImages();
+    adminImages.slice(0, 4).forEach(src => group.push(src));
+
+    for (let i = 0; i < 8; i += 1) {
         const file = AVAILABLE_IMAGE_FILES[(seed + i) % AVAILABLE_IMAGE_FILES.length];
         group.push(encodeURI(`calxin.images/${file}`));
     }
-    return [...new Set(group)].slice(0, 4);
+    return group.slice(0, 12);
 }
 
 // Mobile menu toggle
@@ -143,7 +159,7 @@ function createCartItemElement(item, index) {
     div.className = 'cart-item';
     
     const itemTotal = item.price * item.quantity;
-    const imageGroup = buildImageGroup(item.image, item.productId);
+    const imageGroup = buildImageGroup(item.image, item.productId, item.quantity);
     const thumbs = imageGroup
         .map((src, thumbIndex) => `<img src="${src}" alt="${item.name} ${thumbIndex + 1}" onerror="this.src='${resolveImagePath(item.image)}'">`)
         .join("");
@@ -336,9 +352,15 @@ function loadSuggestedProducts() {
         price: item.price,
         image: resolveImagePath(item.image)
     }));
+    const fromAdmin = getAdminImages().map((image, i) => ({
+        id: 2000 + i,
+        name: `Admin Product ${i + 1}`,
+        price: 0,
+        image
+    }));
 
     const seen = new Set();
-    const suggested = [...fromCart, ...PORTAL_PRODUCTS].filter(product => {
+    const suggested = [...fromCart, ...fromAdmin, ...PORTAL_PRODUCTS].filter(product => {
         const key = `${product.name}|${product.image}`;
         if (seen.has(key)) return false;
         seen.add(key);
