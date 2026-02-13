@@ -66,6 +66,18 @@ function normalizeCartItems(items) {
     }));
 }
 
+function getCheckoutUser() {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const guest = JSON.parse(localStorage.getItem("userInfo") || "null");
+    const fallbackId = `guest-${Date.now()}`;
+    return {
+        id: (user && (user.email || user.phone)) || (guest && (guest.email || guest.phone)) || fallbackId,
+        name: (user && user.name) || (guest && guest.name) || "Guest User",
+        email: (user && user.email) || (guest && guest.email) || "",
+        phone: (user && user.phone) || (guest && guest.phone) || ""
+    };
+}
+
 function getAdminImages() {
     const admin = JSON.parse(localStorage.getItem('adminProducts') || '[]');
     return admin
@@ -294,16 +306,21 @@ function checkout() {
     const deliveryFee = deliveryOption ? parseInt(deliveryOption.value) : 0;
     const discount = parseInt(localStorage.getItem('discount') || 0);
     const total = subtotal + deliveryFee - discount;
+    const checkoutUser = getCheckoutUser();
 
     // Create order summary
     const orderSummary = {
+        orderId: `ORD-${Date.now()}`,
+        user: checkoutUser,
         items: cartItems,
         subtotal: subtotal,
         deliveryFee: deliveryFee,
         deliveryType: deliveryType,
         discount: discount,
         total: total,
-        date: new Date().toLocaleString()
+        status: "Pending",
+        date: new Date().toLocaleString(),
+        createdAt: new Date().toISOString()
     };
 
     // Save order

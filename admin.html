@@ -16,17 +16,20 @@
             <h2><i class="fas fa-tachometer-alt"></i> Admin Panel</h2>
         </div>
         <nav class="admin-nav">
-            <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+            <a href="#" class="nav-item active" onclick="showSection('dashboard', this); return false;">
                 <i class="fas fa-chart-line"></i> Dashboard
             </a>
-            <a href="#" class="nav-item" onclick="showSection('products')">
+            <a href="#" class="nav-item" onclick="showSection('products', this); return false;">
                 <i class="fas fa-cube"></i> Manage Products
             </a>
-            <a href="#" class="nav-item" onclick="showSection('posts')">
+            <a href="#" class="nav-item" onclick="showSection('posts', this); return false;">
                 <i class="fas fa-newspaper"></i> Manage Posts
             </a>
-            <a href="#" class="nav-item" onclick="showSection('images')">
+            <a href="#" class="nav-item" onclick="showSection('images', this); return false;">
                 <i class="fas fa-images"></i> Manage Images
+            </a>
+            <a href="#" class="nav-item" onclick="showSection('orders', this); return false;">
+                <i class="fas fa-shopping-bag"></i> Manage Orders
             </a>
             <a href="index.html" class="nav-item logout">
                 <i class="fas fa-sign-out-alt"></i> Back to Site
@@ -66,8 +69,8 @@
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-info">
-                        <h3>Quick Actions</h3>
-                        <p>3 Available</p>
+                        <h3>Total Orders</h3>
+                        <p id="totalOrders">0</p>
                     </div>
                 </div>
             </div>
@@ -214,12 +217,20 @@
                     </div>
                     <div class="form-group">
                         <label>Select Image File *</label>
-                        <input type="file" id="imageFile" accept="image/*" required>
+                        <input type="file" id="imageFile" accept="image/*">
                         <small>Supported: JPG, PNG, GIF, WebP</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Or Image URL/Path</label>
+                        <input type="text" id="imageUrl" placeholder="e.g., calxin.images/WhatsApp Image.jpeg">
                     </div>
                     <div class="form-group" id="imagePreviewContainer" style="display: none;">
                         <label>Image Preview:</label>
                         <img id="imagePreview" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Image Description</label>
+                        <textarea id="imageDescription" rows="2" placeholder="Write a product image description"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Image Category</label>
@@ -240,6 +251,30 @@
             <!-- Images Gallery -->
             <div class="images-gallery" id="imagesGallery">
                 <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Orders Management Section -->
+        <section id="orders" class="section">
+            <div class="section-header">
+                <h1>Manage Orders</h1>
+            </div>
+            <div class="table-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total (KES)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>

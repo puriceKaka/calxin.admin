@@ -5,8 +5,48 @@
 let products = JSON.parse(localStorage.getItem("adminProducts")) || [];
 let posts = JSON.parse(localStorage.getItem("adminPosts")) || [];
 let images = JSON.parse(localStorage.getItem("adminImages")) || [];
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 let editingId = null;
 let editingType = null;
+
+const SITE_IMAGE_FILES = [
+    "WhatsApp Image 2026-01-23 at 4.58.19 PM (1).jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.19 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.23 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.26 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.27 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.31 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.35 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.37 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.39 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.42 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.44 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.45 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.46 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.47 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.50 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.53 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.55 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.58.59 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.59.00 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 4.59.04 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.00.46 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.00.48 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.00.49 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.00.56 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.00.58 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.00 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.01 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.02 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.03 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.06 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.07 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.09 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.12 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.13 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.14 PM.jpeg",
+    "WhatsApp Image 2026-01-23 at 5.01.16 PM.jpeg"
+];
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", function() {
@@ -15,12 +55,13 @@ document.addEventListener("DOMContentLoaded", function() {
     loadProductsTable();
     loadPostsTable();
     loadImagesGallery();
+    loadOrdersTable();
 });
 
 // ================================
 // SECTION NAVIGATION
 // ================================
-function showSection(sectionId) {
+function showSection(sectionId, navEl) {
     // Hide all sections
     document.querySelectorAll(".section").forEach(section => {
         section.classList.remove("active");
@@ -33,7 +74,9 @@ function showSection(sectionId) {
     document.querySelectorAll(".nav-item").forEach(item => {
         item.classList.remove("active");
     });
-    event.target.closest(".nav-item").classList.add("active");
+    if (navEl) {
+        navEl.classList.add("active");
+    }
     
     // Reload data for the section
     if(sectionId === "dashboard") {
@@ -44,6 +87,8 @@ function showSection(sectionId) {
         loadPostsTable();
     } else if(sectionId === "images") {
         loadImagesGallery();
+    } else if(sectionId === "orders") {
+        loadOrdersTable();
     }
 }
 
@@ -51,9 +96,11 @@ function showSection(sectionId) {
 // DASHBOARD
 // ================================
 function loadDashboard() {
+    orders = JSON.parse(localStorage.getItem("orders")) || [];
     document.getElementById("totalProducts").textContent = products.length;
     document.getElementById("totalPosts").textContent = posts.length;
-    document.getElementById("totalImages").textContent = images.length;
+    document.getElementById("totalImages").textContent = getAllImages().length;
+    document.getElementById("totalOrders").textContent = orders.length;
 }
 
 // ================================
@@ -264,8 +311,11 @@ function loadPostsTable() {
 // ================================
 function showUploadImageForm() {
     editingId = null;
+    editingType = null;
     document.getElementById("imageName").value = "";
     document.getElementById("imageFile").value = "";
+    document.getElementById("imageUrl").value = "";
+    document.getElementById("imageDescription").value = "";
     document.getElementById("imageCategory").value = "product";
     document.getElementById("imagePreviewContainer").style.display = "none";
     document.getElementById("imageForm").style.display = "block";
@@ -298,28 +348,33 @@ function saveImage(event) {
     
     const fileInput = document.getElementById("imageFile");
     const file = fileInput.files[0];
-    
-    if(!file) {
-        alert("Please select an image file!");
+    const imageUrl = document.getElementById("imageUrl").value.trim();
+    const description = document.getElementById("imageDescription").value.trim();
+
+    if(!file && !imageUrl) {
+        alert("Select an image file or provide an image URL/path.");
         return;
     }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
+
+    const persistImage = function(imagePayload) {
         const image = {
             id: editingId || Date.now(),
             name: document.getElementById("imageName").value,
-            data: e.target.result,  // Base64 encoded image data
-            type: file.type,
+            data: imagePayload.data || "",
+            url: imagePayload.url || "",
+            type: imagePayload.type || "",
             category: document.getElementById("imageCategory").value,
+            description: description,
             uploadDate: new Date().toLocaleDateString()
         };
-        
+
         if(editingId) {
             // Update existing image
             const index = images.findIndex(i => i.id === editingId);
             if(index !== -1) {
-                images[index] = image;
+                images[index] = { ...images[index], ...image };
+            } else {
+                images.push(image);
             }
         } else {
             // Add new image
@@ -332,8 +387,22 @@ function saveImage(event) {
         loadDashboard();
         alert("Image uploaded successfully!");
     };
-    
-    reader.readAsDataURL(file);
+
+    if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            persistImage({
+                data: e.target.result,
+                type: file.type
+            });
+        };
+        reader.readAsDataURL(file);
+    } else {
+        persistImage({
+            url: imageUrl,
+            type: "text/url"
+        });
+    }
 }
 
 function deleteImage(id) {
@@ -349,25 +418,28 @@ function deleteImage(id) {
 function loadImagesGallery() {
     const gallery = document.getElementById("imagesGallery");
     gallery.innerHTML = "";
-    
-    if(images.length === 0) {
+
+    const allImages = getAllImages();
+    if(allImages.length === 0) {
         gallery.innerHTML = "<p style='text-align: center; color: #999; padding: 40px;'>No images uploaded yet.</p>";
         return;
     }
-    
-    images.forEach(image => {
+
+    allImages.forEach(image => {
         const card = document.createElement("div");
         card.className = "image-card";
-        const imageSource = image.data ? image.data : image.url;  // Use base64 data if available, otherwise URL
+        const imageSource = image.data ? image.data : image.url;
+        const canDelete = Number(image.id) < 100000;
         card.innerHTML = `
             <img src="${imageSource}" alt="${image.name}" class="image-card-img" onerror="this.src='https://via.placeholder.com/200?text=Image+Not+Found'">
             <div class="image-card-info">
                 <div class="image-card-name">${image.name}</div>
                 <div class="image-card-category">Category: ${image.category}</div>
+                <div class="image-card-description">${image.description || "No description"}</div>
                 <div class="image-card-date">Uploaded: ${image.uploadDate}</div>
                 <div class="image-card-actions">
                     <button class="btn btn-edit" onclick="editImage(${image.id})" style="margin-right: 10px;">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteImage(${image.id})">Delete</button>
+                    ${canDelete ? `<button class="btn btn-danger" onclick="deleteImage(${image.id})">Delete</button>` : `<button class="btn btn-secondary" disabled>Catalog</button>`}
                 </div>
             </div>
         `;
@@ -379,16 +451,116 @@ function loadImagesGallery() {
 // EDIT IMAGE
 // ================================
 function editImage(id) {
-    const image = images.find(i => i.id === id);
+    const image = getAllImages().find(i => i.id === id);
     if(image) {
         editingId = id;
         editingType = "image";
         document.getElementById("imageName").value = image.name;
         document.getElementById("imageCategory").value = image.category;
+        document.getElementById("imageUrl").value = image.url || "";
+        document.getElementById("imageDescription").value = image.description || "";
         document.getElementById("imagePreview").src = image.data || image.url;
         document.getElementById("imagePreviewContainer").style.display = "block";
         document.getElementById("imageForm").style.display = "block";
     }
+}
+
+function getCatalogImages() {
+    const catalog = SITE_IMAGE_FILES.map((file, index) => ({
+        id: 100000 + index,
+        name: file.replace(".jpeg", ""),
+        data: "",
+        url: encodeURI(`calxin.images/${file}`),
+        type: "catalog",
+        category: "product",
+        description: "",
+        uploadDate: "Catalog"
+    }));
+
+    const productImages = products
+        .filter(product => product.image)
+        .map((product, index) => ({
+            id: 200000 + index,
+            name: product.name || `Product ${index + 1}`,
+            data: "",
+            url: encodeURI(String(product.image).replace("images.Calxin/", "calxin.images/")),
+            type: "product",
+            category: product.category || "product",
+            description: product.description || "",
+            uploadDate: "From product"
+        }));
+
+    return [...catalog, ...productImages];
+}
+
+function getAllImages() {
+    const savedImages = images.map(item => ({
+        ...item,
+        id: Number(item.id),
+        url: item.url ? encodeURI(String(item.url).replace("images.Calxin/", "calxin.images/")) : item.url
+    }));
+
+    const map = new Map();
+    [...getCatalogImages(), ...savedImages].forEach(image => {
+        const key = `${image.name}|${image.url || image.data || ""}`;
+        map.set(key, image);
+    });
+    return Array.from(map.values());
+}
+
+// ================================
+// ORDERS MANAGEMENT
+// ================================
+function loadOrdersTable() {
+    orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const tbody = document.getElementById("ordersTableBody");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+    if(orders.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='6' style='text-align:center;color:#888;'>No orders placed yet.</td></tr>";
+        return;
+    }
+
+    orders
+        .slice()
+        .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0))
+        .forEach((order, index) => {
+            const row = document.createElement("tr");
+            const customer = order.user && (order.user.name || order.user.email)
+                ? `${order.user.name || "User"} ${order.user.email ? `(${order.user.email})` : ""}`
+                : "Unknown User";
+            const itemCount = Array.isArray(order.items) ? order.items.length : 0;
+            const total = Number(order.total) || 0;
+            const status = order.status || "Pending";
+            const orderId = order.orderId || `ORD-${index + 1}`;
+            row.innerHTML = `
+                <td>${orderId}</td>
+                <td>${order.date || "-"}</td>
+                <td>${customer}</td>
+                <td>${itemCount}</td>
+                <td>${total.toLocaleString()}</td>
+                <td>
+                    <select class="order-status-select" onchange="updateOrderStatus('${orderId}', this.value)">
+                        <option value="Pending" ${status === "Pending" ? "selected" : ""}>Pending</option>
+                        <option value="Processing" ${status === "Processing" ? "selected" : ""}>Processing</option>
+                        <option value="Completed" ${status === "Completed" ? "selected" : ""}>Completed</option>
+                        <option value="Cancelled" ${status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+                    </select>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+}
+
+function updateOrderStatus(orderId, status) {
+    orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const orderIndex = orders.findIndex(order => (order.orderId || "") === orderId);
+    if(orderIndex === -1) return;
+    orders[orderIndex].status = status;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrdersTable();
+    loadDashboard();
 }
 
 // ================================
@@ -399,6 +571,7 @@ function exportData() {
         products: products,
         posts: posts,
         images: images,
+        orders: orders,
         exportDate: new Date().toISOString()
     };
     
@@ -422,15 +595,18 @@ function importData(file) {
             products = data.products || [];
             posts = data.posts || [];
             images = data.images || [];
+            orders = data.orders || [];
             
             localStorage.setItem("adminProducts", JSON.stringify(products));
             localStorage.setItem("adminPosts", JSON.stringify(posts));
             localStorage.setItem("adminImages", JSON.stringify(images));
+            localStorage.setItem("orders", JSON.stringify(orders));
             
             loadDashboard();
             loadProductsTable();
             loadPostsTable();
             loadImagesGallery();
+            loadOrdersTable();
             
             alert("Data imported successfully!");
         } catch(err) {

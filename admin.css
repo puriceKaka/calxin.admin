@@ -383,6 +383,13 @@ tr:hover {
     margin-bottom: 8px;
 }
 
+.image-card-description {
+    font-size: 0.82rem;
+    color: #444;
+    margin-bottom: 8px;
+    min-height: 32px;
+}
+
 .image-card-date {
     font-size: 0.8rem;
     color: #999;
@@ -392,6 +399,14 @@ tr:hover {
 .image-card-actions {
     display: flex;
     gap: 8px;
+}
+
+.order-status-select {
+    border: 1px solid #ccd;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.9rem;
+    background: #fff;
 }
 
 /* ================================

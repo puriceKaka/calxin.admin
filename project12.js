@@ -115,7 +115,7 @@ function filterByCategory(category) {
                 </div>
                 <p class="card-category">${vehicle.category}</p>
                 <p class="card-price">KES ${vehicle.price.toLocaleString()}</p>
-                <button onclick="addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}')" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
             </div>
         </div>
         `;
@@ -301,6 +301,15 @@ function addToCart(name, price, image) {
     showToastNotification(`✓ ${name} added to cart!`);
 }
 
+function quickAddToCartAndOpenCart(name, price, image, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    addToCart(name, price, image);
+    window.location.href = "cart.html";
+}
+
 // Toast notification function
 function showToastNotification(message) {
     const toast = document.createElement('div');
@@ -344,7 +353,7 @@ function openModal(vehicle){
 
     const btn = document.getElementById("modalAddToCart");
     btn.onclick = function(){
-        addToCart(vehicle.name, vehicle.price, vehicle.image);
+        quickAddToCartAndOpenCart(vehicle.name, vehicle.price, vehicle.image);
     };
     
     if(vehicle.stock === 0) {
@@ -447,6 +456,15 @@ function attachCardClicks(){
             if (event.target.closest("button, a")) {
                 return;
             }
+            const nameElem = card.querySelector("h3");
+            const priceElem = card.querySelector(".card-price");
+            const imageElem = card.querySelector("img");
+            if (!nameElem || !priceElem || !imageElem) return;
+            const name = nameElem.textContent.trim();
+            const price = Number(priceElem.textContent.replace(/[^\d]/g, ""));
+            const image = imageElem.getAttribute("src") || "";
+            if (!name || !price) return;
+            addToCart(name, price, image);
             window.location.href = "cart.html";
         };
     });
@@ -702,6 +720,40 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     });
 
+    // Make spare parts links in hamburger menu functional
+    const sparePartItems = document.querySelectorAll(".spare-parts-menu li");
+    const categoryMap = {
+        "Engine Parts": "Engines",
+        "Brake System": "Brakes",
+        "Suspension": "Suspension",
+        "Tires & Wheels": "Tyres",
+        "Electrical": "Electrical",
+        "Cooling System": "Cooling",
+        "Transmission": "Transmissions",
+        "Interior Trim": "Accessories",
+        "Audio & Navigation": "Audio",
+        "Lights": "Lighting",
+        "Paint & Body": "Accessories",
+        "Performance Parts": "Tools"
+    };
+
+    sparePartItems.forEach(item => {
+        item.style.cursor = "pointer";
+        item.addEventListener("click", function() {
+            const label = item.textContent.trim();
+            const matchedCategory = categoryMap[label];
+            if (matchedCategory) {
+                filterByCategory(matchedCategory);
+            }
+            const sideMenu = document.getElementById("sideMenu");
+            const header = document.querySelector(".header");
+            if (sideMenu && header) {
+                sideMenu.classList.remove("active");
+                header.classList.remove("menu-open");
+            }
+        });
+    });
+
     // Close menu when clicking outside of it
     document.addEventListener("click", function(event) {
         const sideMenu = document.getElementById("sideMenu");
@@ -777,7 +829,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     </div>
                     <p class="card-category">${vehicle.category}</p>
                     <p class="card-price">KES ${vehicle.price.toLocaleString()}</p>
-                    <button onclick="event.stopPropagation(); addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}')" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+                    <button onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event)" ${vehicle.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
                 </div>
             `;
             productsContainer.appendChild(card);
@@ -837,7 +889,7 @@ function viewProductDetails(index) {
                         <p class="product-modal-price">KES ${vehicle.price.toLocaleString()}</p>
                         <p class="product-modal-stock">${vehicle.stock > 0 ? `${vehicle.stock} in stock` : 'Out of stock'}</p>
                         <div class="product-modal-actions">
-                            <button class="btn-primary" onclick="addToCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}'); closeProductModal();" ${vehicle.stock === 0 ? 'disabled' : ''}>
+                            <button class="btn-primary" onclick="quickAddToCartAndOpenCart('${vehicle.name.replace(/'/g, "\\'")}',${vehicle.price},'${vehicle.image}', event);" ${vehicle.stock === 0 ? 'disabled' : ''}>
                                 <i class="fas fa-shopping-cart"></i> Add to Cart
                             </button>
                             <a href="product-view.html?id=${index}" class="btn-secondary">
