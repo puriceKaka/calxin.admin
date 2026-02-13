@@ -700,37 +700,28 @@ ul {
 
 .card-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
 }
 
 .card-actions .wishlist-heart-btn {
-    flex: 0 0 40px;
-    flex-shrink: 0;
     width: 40px;
-    min-width: 40px;
     height: 40px;
-    padding: 0;
-    font-size: 1rem;
-    line-height: 1;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    font-size: 1rem;
     color: #777;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.card-actions .wishlist-heart-btn:hover {
-    background: #fff3f6;
-    border-color: #ffb4c2;
+    cursor: pointer;
 }
 
 .card-actions .wishlist-heart-btn.liked {
     background: #ffe1e8;
-    color: #c81634;
     border-color: #ff9cb0;
+    color: #c81634;
 }
 
 /* ================================
