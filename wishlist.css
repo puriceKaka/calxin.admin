@@ -455,3 +455,15 @@ body {
         gap: 1rem;
     }
 }
+
+/* Static UI mode */
+html {
+    scroll-behavior: auto;
+}
+
+*,
+*::before,
+*::after {
+    animation: none !important;
+    transition: none !important;
+}

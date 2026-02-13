@@ -100,9 +100,9 @@ products.forEach((product, index) => {
 let currentProduct = null;
 let quantity = 1;
 
-// Mobile menu toggle
-function toggleMobileMenu() {
-    const sideMenu = document.getElementById('sideMenuMobile');
+// Side menu toggle
+function toggleMenu() {
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger) {
@@ -111,8 +111,8 @@ function toggleMobileMenu() {
     }
 }
 
-function closeMobileMenu() {
-    const sideMenu = document.getElementById('sideMenuMobile');
+function closeMenu() {
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger) {
@@ -123,15 +123,18 @@ function closeMobileMenu() {
 
 // Close menu when clicking outside
 document.addEventListener('click', function(event) {
-    const sideMenu = document.getElementById('sideMenuMobile');
+    const sideMenu = document.getElementById('sideMenu');
     const hamburger = document.querySelector('.hamburger');
     
     if (sideMenu && hamburger && sideMenu.classList.contains('active')) {
         if (!sideMenu.contains(event.target) && !hamburger.contains(event.target)) {
-            closeMobileMenu();
+            closeMenu();
         }
     }
 });
+
+window.toggleMenu = toggleMenu;
+window.closeMenu = closeMenu;
 
 // Load product details on page load
 document.addEventListener('DOMContentLoaded', function() {

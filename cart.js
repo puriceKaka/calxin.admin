@@ -66,6 +66,16 @@ function normalizeCartItems(items) {
     }));
 }
 
+function buildImageGroup(baseImage, productId) {
+    const seed = Math.abs(Number(productId) || 0) % AVAILABLE_IMAGE_FILES.length;
+    const group = [resolveImagePath(baseImage)];
+    for (let i = 0; i < 3; i += 1) {
+        const file = AVAILABLE_IMAGE_FILES[(seed + i) % AVAILABLE_IMAGE_FILES.length];
+        group.push(encodeURI(`calxin.images/${file}`));
+    }
+    return [...new Set(group)].slice(0, 4);
+}
+
 // Mobile menu toggle
 function toggleMobileMenu() {
     const sideMenu = document.getElementById('sideMenu');
@@ -133,10 +143,15 @@ function createCartItemElement(item, index) {
     div.className = 'cart-item';
     
     const itemTotal = item.price * item.quantity;
+    const imageGroup = buildImageGroup(item.image, item.productId);
+    const thumbs = imageGroup
+        .map((src, thumbIndex) => `<img src="${src}" alt="${item.name} ${thumbIndex + 1}" onerror="this.src='${resolveImagePath(item.image)}'">`)
+        .join("");
 
     div.innerHTML = `
         <div class="cart-item-image">
-            <img src="${item.image}" alt="${item.name}">
+            <img src="${imageGroup[0]}" alt="${item.name}">
+            <div class="cart-item-thumbs">${thumbs}</div>
         </div>
         <div class="cart-item-details">
             <div class="cart-item-name">${item.name}</div>
@@ -314,12 +329,28 @@ function loadSuggestedProducts() {
     const container = document.getElementById('suggestedProducts');
     container.innerHTML = '';
 
-    if(PORTAL_PRODUCTS.length === 0) {
+    const cartItems = normalizeCartItems(JSON.parse(localStorage.getItem('cart') || '[]'));
+    const fromCart = cartItems.map((item, i) => ({
+        id: 1000 + i,
+        name: item.name,
+        price: item.price,
+        image: resolveImagePath(item.image)
+    }));
+
+    const seen = new Set();
+    const suggested = [...fromCart, ...PORTAL_PRODUCTS].filter(product => {
+        const key = `${product.name}|${product.image}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+
+    if(suggested.length === 0) {
         container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No products available</p>';
         return;
     }
 
-    PORTAL_PRODUCTS.forEach(product => {
+    suggested.forEach(product => {
         const card = document.createElement('div');
         card.className = 'suggested-card';
         card.innerHTML = `

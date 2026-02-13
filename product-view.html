@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - Calxin Auto</title>
+    <title>Product Details - Calix Auto Limited</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="project.css">
     <link rel="stylesheet" href="product-view.css">
 </head>
 <body>
@@ -12,7 +13,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <a href="index.html"><h1>Calxin Auto</h1></a>
+                <a href="index.html"><h1>Calix Auto Limited</h1></a>
             </div>
             <div class="nav-links">
                 <a href="index.html">Home</a>
@@ -21,7 +22,7 @@
                 <a href="cart.html">Cart</a>
                 <a href="wishlist.html">Wishlist</a>
             </div>
-            <div class="hamburger" onclick="toggleMobileMenu()">
+            <div class="hamburger" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -29,15 +30,32 @@
         </div>
     </nav>
 
-    <!-- Side Menu for Mobile -->
-    <aside class="side-menu-mobile" id="sideMenuMobile">
+    <!-- Side Menu -->
+    <aside class="side-menu" id="sideMenu">
         <h3><i class="fas fa-bars"></i> Menu</h3>
-        <ul class="nav-menu-mobile">
-            <li><a href="index.html" onclick="closeMobileMenu()"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="about.html" onclick="closeMobileMenu()"><i class="fas fa-info-circle"></i> About</a></li>
-            <li><a href="contact.html" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
-            <li><a href="cart.html" onclick="closeMobileMenu()"><i class="fas fa-shopping-cart"></i> Cart</a></li>
-            <li><a href="wishlist.html" onclick="closeMobileMenu()"><i class="fas fa-heart"></i> Wishlist</a></li>
+        <ul class="nav-menu">
+            <li><a href="index.html" onclick="closeMenu()"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="about.html" onclick="closeMenu()"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="contact.html" onclick="closeMenu()"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="login.html" onclick="closeMenu()"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+            <li><a href="cart.html" onclick="closeMenu()"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+            <li><a href="wishlist.html" onclick="closeMenu()"><i class="fas fa-heart"></i> Wishlist</a></li>
+        </ul>
+        <hr>
+        <h4>Spare Parts</h4>
+        <ul class="spare-parts-menu">
+            <li><i class="fas fa-cog"></i> Engine Parts</li>
+            <li><i class="fas fa-circle"></i> Brake System</li>
+            <li><i class="fas fa-arrows"></i> Suspension</li>
+            <li><i class="fas fa-ring"></i> Tires & Wheels</li>
+            <li><i class="fas fa-bolt"></i> Electrical</li>
+            <li><i class="fas fa-water"></i> Cooling System</li>
+            <li><i class="fas fa-gear"></i> Transmission</li>
+            <li><i class="fas fa-chair"></i> Interior Trim</li>
+            <li><i class="fas fa-volume-up"></i> Audio & Navigation</li>
+            <li><i class="fas fa-lightbulb"></i> Lights</li>
+            <li><i class="fas fa-paint-brush"></i> Paint & Body</li>
+            <li><i class="fas fa-rocket"></i> Performance Parts</li>
         </ul>
     </aside>
 
@@ -133,7 +151,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h4>About Us</h4>
-                <p>Calxin Auto Mombasa is your trusted partner in premium vehicles and auto solutions since 2020.</p>
+                <p>Calix Auto Limited Mombasa is your trusted partner in premium vehicles and auto solutions since 2020.</p>
             </div>
             <div class="footer-section">
                 <h4>Quick Links</h4>
@@ -157,7 +175,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Calxin Auto Mombasa. All rights reserved.</p>
+            <p>&copy; 2026 Calix Auto Limited Mombasa. All rights reserved.</p>
             <p>Designed by Purice</p>
         </div>
     </footer>
@@ -165,3 +183,4 @@
     <script src="product-view.js"></script>
 </body>
 </html>
+
