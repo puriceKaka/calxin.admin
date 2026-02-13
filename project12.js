@@ -772,8 +772,8 @@ extendVehiclesWithGalleryImages();
 function normalizeVehiclePrices() {
     vehicles.forEach((vehicle) => {
         const basePrice = Number(vehicle.price) || 0;
-        const scaledPrice = Math.round((basePrice * 0.22) / 50) * 50;
-        vehicle.price = Math.max(450, scaledPrice);
+        const scaledPrice = Math.round((basePrice * 0.18) / 50) * 50;
+        vehicle.price = Math.max(350, Math.min(8500, scaledPrice));
     });
 }
 

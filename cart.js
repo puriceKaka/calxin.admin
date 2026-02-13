@@ -85,25 +85,6 @@ function getAdminImages() {
         .filter(Boolean);
 }
 
-function buildImageGroup(baseImage, productId, quantity) {
-    const seed = Math.abs(Number(productId) || 0) % AVAILABLE_IMAGE_FILES.length;
-    const mainImage = resolveImagePath(baseImage);
-    const group = [];
-    const sameCount = Math.min(Math.max(Number(quantity) || 1, 1), 6);
-    for (let i = 0; i < sameCount; i += 1) {
-        group.push(mainImage);
-    }
-
-    const adminImages = getAdminImages();
-    adminImages.slice(0, 4).forEach(src => group.push(src));
-
-    for (let i = 0; i < 8; i += 1) {
-        const file = AVAILABLE_IMAGE_FILES[(seed + i) % AVAILABLE_IMAGE_FILES.length];
-        group.push(encodeURI(`calxin.images/${file}`));
-    }
-    return group.slice(0, 12);
-}
-
 // Mobile menu toggle
 function toggleMobileMenu() {
     const sideMenu = document.getElementById('sideMenu');
